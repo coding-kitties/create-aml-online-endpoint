@@ -1,5 +1,5 @@
-name: 'Deploy AML Online Endpoint with Docker'
-description: 'Deploy an Azure Machine Learning Online Endpoint using Docker, Azure CLI, and Azure Login'
+name: 'Create Azure ML Online Endpoint'
+description: 'Create an Azure ML Online Endpoint'
 author: 'Marc van Duyn'
 branding:
   icon: 'cloud'
