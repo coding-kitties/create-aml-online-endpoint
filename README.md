@@ -1,6 +1,6 @@
-# Deploy AML Online Endpoint - GitHub Action
+# Create Azure Machine Learning Online Endpoint - GitHub Action
 
-This GitHub Action deploys an **Azure Machine Learning Online Endpoint** using **Azure CLI** (via a Bash script).
+This GitHub Action creates an **Azure Machine Learning Online Endpoint**.
 
 ## 🚀 Usage
 
@@ -14,12 +14,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Deploy AML Online Endpoint
+      - name: Create AML Online Endpoint
         uses: coding-kitties/create-aml-online-endpoint@v1
         with:
           azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+          endpoint_name: 'my-endpoint'
           resource_group: 'my-resource-group'
           workspace_name: 'my-workspace'
-          endpoint_file: './config/endpoint.yml'
-          deployment_file: './config/deployment.yml'
 ```
