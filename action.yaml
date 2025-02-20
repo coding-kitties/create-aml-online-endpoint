@@ -2,13 +2,10 @@ name: 'Create Azure ML Online Endpoint'
 description: 'Create an Azure ML Online Endpoint'
 author: 'Marc van Duyn'
 branding:
-  icon: 'cloud'
-  color: 'blue'
+    icon: 'azure-logo.svg'
+    color: 'blue'
 
 inputs:
-  azure_credentials:
-    description: 'Azure credentials in JSON format (Service Principal)'
-    required: true
   endpointName:
     description: 'Name of the endpoint'
     required: true
@@ -20,20 +17,5 @@ inputs:
     required: true
 
 runs:
-  using: 'composite'
-  steps:
-    # Step 1: Log into Azure using Azure Login action
-    - name: Log into Azure
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-    # Step 2: Checkout repository
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    # Step 3: Set up Docker (if needed) and run the entrypoint script
-    - name: Run Docker container with entrypoint.sh
-      run: |
-        docker build -t aml-deploy .
-        docker run -v $PWD:/workspace -e AZURE_CREDENTIALS="${{ secrets.AZURE_CREDENTIALS }}" aml-deploy /workspace/entrypoint.sh "${{ inputs.azure_credentials }}" "${{ inputs.endpointName }}" "${{ inputs.workspace_name }}" "${{ inputs.resource_group }}"
+  using: "node16"
+  main: "dist/index.js"
