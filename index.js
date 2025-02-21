@@ -2,12 +2,17 @@ import * as core from "@actions/core";
 import * as exec from "@actions/exec";
 
 async function checkIfEndpointExists(endpointName, resourceGroup, workspaceName) {
+    let errorOutput = "";
+    let output = "";
+
     try {
-        let output = "";
         const options = {
             listeners: {
                 stdout: (data) => {
                     output += data.toString();
+                },
+                stderr: (data) => {
+                    errorOutput += data.toString();
                 }
             },
             silent: true
@@ -16,6 +21,7 @@ async function checkIfEndpointExists(endpointName, resourceGroup, workspaceName)
         // Check if the endpoint exists
         await exec.exec(`az ml online-endpoint show --name ${endpointName} --resource-group ${resourceGroup} --workspace-name ${workspaceName}`, [], options);
 
+        console.log("✅ Endpoint already exists. Output:", output);
         return true; // If the command succeeds, the endpoint exists
     } catch (error) {
         return false; // If the command fails, the endpoint does not exist
@@ -23,32 +29,46 @@ async function checkIfEndpointExists(endpointName, resourceGroup, workspaceName)
 }
 
 async function checkIfResourceGroupExists(resourceGroup) {
+    let errorOutput = "";
+    let output = "";
+
     try {
-        let output = "";
         const options = {
             listeners: {
                 stdout: (data) => {
                     output += data.toString();
+                },
+                stderr: (data) => {
+                    errorOutput += data.toString();
                 }
             },
             silent: true
         };
+        // Execute the Azure CLI command
+        await exec.exec(`az group show --name ${resourceGroup} --resource-group ${resourceGroup}`, [], options);
 
-        // Check if the resource group exists
-        await exec.exec(`az group show --name ${resourceGroup}`, [], options);
-        return true; // If the command succeeds, the endpoint exists
+        console.log("✅ Resource Group Found. Output:", output);
+        return true;
     } catch (error) {
-        return false; // If the command fails, the endpoint does not exist
+        console.log(
+            "❌ Resource Group Not Found or Error Occurred:", errorOutput || error.message
+        );
+        return false; // Return false if the workspace does not exist
     }
 }
 
 async function checkIfWorkspaceExists(workspaceName, resourceGroup) {
+    let errorOutput = "";
+    let output = "";
+
     try {
-        let output = "";
         const options = {
             listeners: {
                 stdout: (data) => {
                     output += data.toString();
+                },
+                stderr: (data) => {
+                    errorOutput += data.toString();
                 }
             },
             silent: true
@@ -56,9 +76,13 @@ async function checkIfWorkspaceExists(workspaceName, resourceGroup) {
 
         // Check if the workspace exists
         await exec.exec(`az ml workspace show --name ${workspaceName} --resource-group ${resourceGroup}`, [], options);
-        return true; // If the command succeeds, the endpoint exists
+        console.log("✅ Resource Group Found. Output:", output);
+        return true;
     } catch (error) {
-        return false; // If the command fails, the endpoint does not exist
+        console.log(
+            "❌ Resource Group Not Found or Error Occurred:", errorOutput || error.message
+        );
+        return false;
     }
 }
 
@@ -84,8 +108,11 @@ try {
     console.log(`🔹 Checking if resource group '${resourceGroup}' exists...`)
     ;
     const resourceGroupExists = await checkIfResourceGroupExists(resourceGroup);
+
     if (!resourceGroupExists) {
         throw new Error(`Resource group '${resourceGroup}' does not exist.`);
+    } else {
+        console.log(`✅ Resource group '${resourceGroup}' exists.`);
     }
 
     // Check if the workspace exists
@@ -95,17 +122,19 @@ try {
 
     if (!workspaceExists) {
         throw new Error(`Workspace '${workspaceName}' does not exist in resource group '${resourceGroup}'.`);
+    } else {
+        console.log(`✅ Workspace '${workspaceName}' exists in resource group '${resourceGroup}'.`);
     }
 
     console.log(`🔹 Checking if endpoint '${endpointName}' exists...`);
-    const exists = await endpointExists(
+    const exists = await checkIfEndpointExists(
         endpointName, resourceGroup, workspaceName
     );
 
     if (exists) {
         console.log(`✅ Endpoint '${endpointName}' already exists. Skipping creation.`);
     } else {
-        console.log(`🔹 Creating endpoint '${endpointName}'...`);
+        console.log(`🔹 Endpoint does not exist, creating it ...`)
         await exec.exec(`az ml online-endpoint create --name ${endpointName} --resource-group ${resourceGroup} --workspace-name ${workspaceName}`);
         console.log(`✅ Successfully created endpoint: ${endpointName}`);
     }

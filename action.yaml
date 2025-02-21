@@ -1,5 +1,5 @@
-name: 'Create Azure ML Online Endpoint'
-description: 'Create an Azure ML Online Endpoint'
+name: 'Create Azure Machine Learning Online Endpoint'
+description: 'Create an Azure Machine Learning Online Endpoint'
 author: 'Marc van Duyn'
 branding:
   icon: 'cloud'
