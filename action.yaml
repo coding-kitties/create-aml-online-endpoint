@@ -4,6 +4,7 @@ author: 'Marc van Duyn'
 branding:
     icon: 'azure-logo.svg'
     color: 'blue'
+    label: 'Azure ML'
 
 inputs:
   endpointName:
