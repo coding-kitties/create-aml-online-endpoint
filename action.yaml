@@ -2,9 +2,8 @@ name: 'Create Azure ML Online Endpoint'
 description: 'Create an Azure ML Online Endpoint'
 author: 'Marc van Duyn'
 branding:
-    icon: 'azure-logo.svg'
-    color: 'blue'
-    label: 'Azure ML'
+  icon: 'cloud'
+  color: 'blue'
 
 inputs:
   endpointName:
