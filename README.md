@@ -2,6 +2,16 @@
 
 This GitHub Action creates an **Azure Machine Learning Online Endpoint**.
 
+Features:
+
+* Create an Azure Machine Learning Online Endpoint
+* Check if endpoint already exists, only update if it doesn't
+* Checks if resource group, workspace and endpoint exist
+
+For other Azure Machine Learning related github actions check out:
+
+* [create-azure-machine-learning-deployment](https://github.com/coding-kitties/create-azure-machine-learning-deployment)
+*
 ## Dependencies on other Github Actions
 
 * Authenticate using [Azure Login](https://github.com/Azure/login)
