@@ -31,7 +31,7 @@ jobs:
          creds: ${{secrets.AZURE_CREDENTIALS}}
 
       - name: Create AML Online Endpoint
-        uses: coding-kitties/create-azure-machine-learning-online-endpoint@v0.3.0
+        uses: coding-kitties/create-azure-machine-learning-online-endpoint@v0.4.0
         with:
           endpoint_name: 'my-endpoint'
           resource_group: 'my-resource-group'
